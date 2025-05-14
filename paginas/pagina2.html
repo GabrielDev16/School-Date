@@ -1,11 +1,8 @@
-<!-- pagina1.html -->
-
-
 <div id="pagina-conteudo">
   <div class="container text-center">
     <div class="row g-2">
       <div class="col-4">
-        <button  type="button" class="btn btn-primary"> <a style="text-decoration: none; color: white;" href="../paginas/pagina1.html">Cadastrar Aluno</a></button>
+        <button  type="button" class="btn btn-primary"> <a style="text-decoration: none; color: white;" href="../paginas/pagina1.html"><a href="../paginas/pagina1.html" style="text-decoration: none; color: #fff;">Cadastrar Aluno</a></a></button>
       </div>
       <div class="col-8">
         
@@ -38,78 +35,6 @@
           <td>123.456.789-00</td>
           <td>08/12/2005</td>
           <td>rua bela vista</td>
-          <td>Piauí</td>
-        </tr>
-        <tr>
-          <td>Ana</td>
-          <td>Silva</td>
-          <td>321.654.987-11</td>
-          <td>15/03/2006</td>
-          <td>Avenida Brasil</td>
-          <td>Bahia</td>
-        </tr>
-        <tr>
-          <td>Pedro</td>
-          <td>Santos</td>
-          <td>456.789.123-22</td>
-          <td>22/07/2007</td>
-          <td>Rua das Flores</td>
-          <td>Ceará</td>
-        </tr>
-        <tr>
-          <td>Juliana</td>
-          <td>Almeida</td>
-          <td>741.852.963-00</td>
-          <td>01/01/2008</td>
-          <td>Travessa Central</td>
-          <td>Maranhão</td>
-        </tr>
-        <tr>
-          <td>Lucas</td>
-          <td>Moraes</td>
-          <td>369.258.147-77</td>
-          <td>18/05/2005</td>
-          <td>Rua Nova Esperança</td>
-          <td>Paraíba</td>
-        </tr>
-        <tr>
-          <td>Fernanda</td>
-          <td>Lima</td>
-          <td>852.741.963-55</td>
-          <td>11/10/2006</td>
-          <td>Rua da Paz</td>
-          <td>Alagoas</td>
-        </tr>
-        <tr>
-          <td>João</td>
-          <td>Martins</td>
-          <td>111.222.333-00</td>
-          <td>29/08/2009</td>
-          <td>Vila Bela</td>
-          <td>Sergipe</td>
-        </tr>
-        <tr>
-          <td>Beatriz</td>
-          <td>Rocha</td>
-          <td>222.333.444-11</td>
-          <td>17/09/2007</td>
-          <td>Alameda das Árvores</td>
-          <td>Pernambuco</td>
-        </tr>
-        <tr>
-          <td>Rafael</td>
-          <td>Castro</td>
-          <td>333.444.555-22</td>
-          <td>05/04/2006</td>
-          <td>Rua do Sol</td>
-          <td>Pernambuco</td>
-        </tr>
-        <tr>
-          <td>Marina</td>
-          <td>Fernandes</td>
-          <td>444.555.666-33</td>
-          <td>12/06/2008</td>
-          <td>Rua São João</td>
           <td>Piauí</td>
         </tr>
         <!-- Adicione +10 registros semelhantes se desejar completar os 20 -->
@@ -150,21 +75,59 @@
 </div>
 
 <script>
-  // Primeiro, carrega o template
-  const conteudoDaPagina = document.getElementById('pagina-conteudo').cloneNode(true)
-  fetch('../template/layout.html')
-    .then(res => res.text())
-    .then(templateHtml => {
-      document.open(); // Corrige problemas de JS ao usar innerHTML direto
-      document.write(templateHtml);
-      document.close();
+  document.addEventListener("DOMContentLoaded", function () {
+    // Primeiro, carrega o template
+    const conteudoDaPagina = document.getElementById('pagina-conteudo').cloneNode(true);
+    fetch('../template/layout.html')
+      .then(res => res.text())
+      .then(templateHtml => {
+        document.open(); // Corrige problemas de JS ao usar innerHTML direto
+        document.write(templateHtml);
+        document.close();
 
-      // Espera o DOM do template ser carregado
-      window.addEventListener('DOMContentLoaded', () => {
-        const divConteudo = document.getElementById('conteudo');
-        if (divConteudo) {
-          divConteudo.appendChild(conteudoDaPagina);
-        }
+        // Espera o DOM do template ser carregado
+        window.addEventListener('DOMContentLoaded', () => {
+          const divConteudo = document.getElementById('conteudo');
+          if (divConteudo) {
+            divConteudo.appendChild(conteudoDaPagina);
+          }
+
+          // Após o template ser carregado, manipula os dados do localStorage
+          carregarDadosDoLocalStorage();
+        });
       });
-    });
+  });
+
+  function carregarDadosDoLocalStorage() {
+    // Recupera os dados do localStorage
+    const alunoCadastrado = JSON.parse(localStorage.getItem("alunoCadastrado"));
+
+    if (alunoCadastrado) {
+      // Aguarda o DOM estar completamente carregado antes de manipular a tabela
+      setTimeout(() => {
+        const tabela = document.querySelector("table tbody");
+        if (tabela) {
+          const novaLinha = document.createElement("tr");
+
+          novaLinha.innerHTML = `
+            <td>${alunoCadastrado.nome}</td>
+            <td>${alunoCadastrado.sobrenome}</td>
+            <td>${alunoCadastrado.cpf}</td>
+            <td>${alunoCadastrado.dataNascimento}</td>
+            <td>${alunoCadastrado.logradouro}</td>
+            <td>${alunoCadastrado.estado}</td>
+          `;
+
+          tabela.appendChild(novaLinha);
+
+          // Limpa o localStorage após exibir os dados
+          localStorage.removeItem("alunoCadastrado");
+        } else {
+          console.error("Tabela não encontrada no DOM.");
+        }
+      }, 100); // Pequeno atraso para garantir que o DOM esteja pronto
+    } else {
+      console.warn("Nenhum dado encontrado no localStorage.");
+    }
+  }
 </script>
