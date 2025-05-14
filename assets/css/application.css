@@ -395,6 +395,7 @@ table.table td a.student {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -506,10 +507,10 @@ input::-webkit-inner-spin-button {
     display: none;
   }
   .simple-calendar table {
-    min-width: 500px;
     font-size: 10px;
   }
-}
+  }
+
 .simple-calendar .has-events {
   background-color: #03A9F4;
 }
